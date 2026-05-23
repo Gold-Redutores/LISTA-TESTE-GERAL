@@ -74,6 +74,16 @@
         .signature-pad { border: 1px solid #eee; background: #fff; width: 95%; height: 80px; cursor: crosshair; touch-action: none; }
         .name-input { border-bottom: 1px dashed #ccc !important; width: 90%; margin-bottom: 5px; text-align: center; font-weight: bold; text-transform: uppercase; }
         
+        /* Layout Multimídia Atualizado */
+        .music-layout { display: flex; gap: 15px; margin-top: 10px; }
+        .music-controls { flex: 1; background: #f9f9f9; padding: 12px; border: 1px solid #333; }
+        .playlist-box { flex: 1; background: #fff; border: 1px solid #333; max-height: 160px; overflow-y: auto; }
+        .music-item { padding: 6px 10px; font-size: 11px; cursor: pointer; border-bottom: 1px solid #eee; color: #333; }
+        .music-item:hover { background: #eee; color: #003366; font-weight: bold; }
+        .music-item.playing { background: #ed1c24; color: white; font-weight: bold; }
+        audio { width: 100%; margin-top: 10px; }
+        .music-status { font-size: 10px; color: #666; display: block; margin-top: 2px; }
+
         .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 40px; padding-bottom: 50px; }
         .btn-action { padding: 12px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
 
@@ -90,13 +100,11 @@
 
     <header class="header-container">
         <div class="logo-box">
-            <!-- Apenas uma tag de imagem agora, mudando a origem (src) dinamicamente -->
             <img id="dinamic-logo" class="brand-logo" src="GOLD REDUTORES.JPG" alt="Gold Redutores">
         </div>
 
         <div class="title-area">
             <h2>RELATÓRIO DE MANUTENÇÃO PREVENTIVA</h2>
-            <!-- Primeira Caixa de Combinação: Seleção da Empresa -->
             <select id="select-empresa" class="select-header" onchange="atualizarSegundaCaixa()" style="width: auto; margin-top: 5px; text-align: center;">
                 <option value="REDUTORES">GOLD REDUTORES</option>
                 <option value="MAQUINAS">GOLD MÁQUINAS</option>
@@ -106,10 +114,8 @@
         
         <div class="header-box" style="text-align: right;">
             <label style="font-size: 11px; font-weight: bold; display:block; color: #003366; margin-bottom: 2px;">OPÇÃO / FILTRO:</label>
-            <!-- Segunda Caixa de Combinação: Depende do resultado da primeira -->
             <select id="select-opcoes" class="select-header" style="width: 120px; text-align: center;">
-                <!-- Opções serão inseridas via JavaScript -->
-            </select>
+                </select>
         </div>
     </header>
 
@@ -182,6 +188,37 @@
         <tbody id="tabela-pecas"></tbody>
     </table>
 
+    <div class="section no-print">PASTAS</div>
+    <div class="music-layout no-print">
+        <div class="music-controls">
+            <label style="font-size: 11px; font-weight: bold; color: #003366; display: block; margin-bottom: 5px;">SELECIONE A PASTA DE MÚSICAS:</label>
+            <select id="select-pastas" class="select-header" style="width: 100%; font-size: 12px;" onchange="listarMusicasDaPasta()">
+                <option value="amado batista dinamite de amor">amado batista dinamite de amor</option>
+                <option value="As velhinhas">As velhinhas</option>
+                <option value="AS VELHINHAS DA RICK SOM">AS VELHINHAS DA RICK SOM</option>
+                <option value="as velhinhas dance vol 01">as velhinhas dance vol 01</option>
+                <option value="as velhinhas dance vol 02">as velhinhas dance vol 02</option>
+                <option value="CLASSICOS SERTANEJO ANOS 80 90">CLASSICOS SERTANEJO ANOS 80 90</option>
+                <option value="dj celso">dj celso</option>
+                <option value="FHASBACK 41 MUSICAS">FHASBACK 41 MUSICAS</option>
+                <option value="FLASH BACK 01">FLASH BACK 01</option>
+                <option value="Flash Back Anos 80">Flash Back Anos 80</option>
+                <option value="Flash Back Anos 90">Flash Back Anos 90</option>
+                <option value="flash back o melhor">flash back o melhor</option>
+            </select>
+            
+            <div style="margin-top: 12px;">
+                <span id="current-track-title" style="font-size: 11px; font-weight: bold; color: #ed1c24; display:block; min-height: 15px;">Nenhuma música tocando</span>
+                <audio id="audio-player" controls></audio>
+                <span id="repo-music-status" class="music-status">⏳ Carregando índice de faixas...</span>
+            </div>
+        </div>
+        
+        <div class="playlist-box" id="lista-musicas">
+            <div style="padding:10px; font-size:11px; color:#666;">Buscando faixas no repositório...</div>
+        </div>
+    </div>
+
     <div class="section">CONCLUSÕES</div>
     <textarea id="conclusoes" rows="5" style="width: 100%; border: 1px solid #333; margin-top: 5px; padding: 8px;" placeholder="Parecer técnico final..."></textarea>
 
@@ -220,10 +257,17 @@
     <script>
         const URL_CSV_OS = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/main/dmsoser00000045.csv';
         const URL_CSV_PRODUTOS = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/refs/heads/main/relalisatagemprodutosdetada.csv';
+        
+        // URLs do GitHub - Streaming e API de leitura de diretório
+        const URL_BASE_STREAM = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/main/';
+        const URL_API_GITHUB = 'https://api.github.com/repos/Gold-Redutores/PRENCHIMENTO-OS-GOLD/contents/';
+
         let dadosOS = []; let listaProdutos = [];
         let padsEmUso = {};
+        
+        // Objeto global que guardará a lista de músicas encontradas dinamicamente
+        let playlistMapeada = {};
 
-        // Configuração dos dados das caixas de combinação dinâmicas e caminhos das imagens
         const opcoesPorEmpresa = {
             "REDUTORES": { opcoes: ["1", "2", "3"], logo: "GOLD REDUTORES.JPG" },
             "MAQUINAS": { opcoes: ["1", "5", "6", "7"], logo: "GOLD MAQUINAS.png" }, 
@@ -235,10 +279,7 @@
             const selectOpcoes = document.getElementById('select-opcoes');
             const imgLogo = document.getElementById('dinamic-logo');
             
-            // Limpa opções anteriores
             selectOpcoes.innerHTML = '';
-            
-            // Adiciona novas opções baseadas na seleção
             const dados = opcoesPorEmpresa[empresaSelecionada];
             dados.opcoes.forEach(opcao => {
                 const elOpt = document.createElement('option');
@@ -247,9 +288,80 @@
                 selectOpcoes.appendChild(elOpt);
             });
 
-            // Atualiza dinamicamente o SRC da imagem única
             imgLogo.src = dados.logo;
             imgLogo.alt = "Gold " + empresaSelecionada.charAt(0) + empresaSelecionada.slice(1).toLowerCase();
+        }
+
+        // ETAPA 1: Faz a varredura automática de arquivos nas pastas do GitHub via API Pública
+        function escanearRepositorioMusicas() {
+            const statusAudio = document.getElementById('repo-music-status');
+            const selectPastas = document.getElementById('select-pastas');
+            
+            // Cria promessas de varredura para cada pasta configurada no select
+            const promessas = Array.from(selectPastas.options).map(opt => {
+                const nomePasta = opt.value;
+                return fetch(URL_API_GITHUB + encodeURIComponent(nomePasta))
+                    .then(res => {
+                        if(!res.ok) return [];
+                        return res.json();
+                    })
+                    .then(arquivos => {
+                        if(Array.isArray(arquivos)) {
+                            // Filtra apenas arquivos que terminam com .mp3
+                            playlistMapeada[nomePasta] = arquivos
+                                .filter(f => f.name.toLowerCase().endsWith('.mp3'))
+                                .map(f => f.name);
+                        }
+                    })
+                    .catch(() => { playlistMapeada[nomePasta] = []; });
+            });
+
+            Promise.all(promessas).then(() => {
+                statusAudio.innerText = "🎵 Repositório de músicas mapeado com sucesso!";
+                listarMusicasDaPasta(); // Monta a lista inicial da primeira pasta
+            });
+        }
+
+        // ETAPA 2: Lista as músicas no quadro ao trocar de pasta ou concluir escaneamento
+        function listarMusicasDaPasta() {
+            const pastaSelecionada = document.getElementById('select-pastas').value;
+            const containerLista = document.getElementById('lista-musicas');
+            containerLista.innerHTML = '';
+
+            const musicas = playlistMapeada[pastaSelecionada] || [];
+
+            if(musicas.length === 0) {
+                containerLista.innerHTML = '<div style="padding:10px; font-size:11px; color:#999;">Nenhuma música (.mp3) encontrada nesta pasta do GitHub.</div>';
+                return;
+            }
+
+            musicas.forEach(musica => {
+                const item = document.createElement('div');
+                item.className = 'music-item';
+                item.innerText = musica.replace('.mp3', ''); // Visual limpo sem o .mp3
+                
+                // Só reproduz quando houver o clique explícito na música
+                item.onclick = function() {
+                    document.querySelectorAll('.music-item').forEach(el => el.classList.remove('playing'));
+                    item.classList.add('playing');
+                    tocarMusicaGitHub(pastaSelecionada, musica);
+                };
+                containerLista.appendChild(item);
+            });
+        }
+
+        // ETAPA 3: Toca a música clicada fazendo stream direto
+        function tocarMusicaGitHub(pasta, arquivo) {
+            const player = document.getElementById('audio-player');
+            const txtTitulo = document.getElementById('current-track-title');
+            
+            const urlFinalAudio = URL_BASE_STREAM + encodeURIComponent(pasta) + "/" + encodeURIComponent(arquivo);
+            
+            player.src = urlFinalAudio;
+            txtTitulo.innerText = "Tocando: " + arquivo.replace('.mp3', '');
+            player.play().catch(err => {
+                alert("Erro ao reproduzir a faixa do servidor do GitHub.");
+            });
         }
 
         function parseCSV(text) {
@@ -379,7 +491,7 @@
             }
         }
 
-        function configurarAssinatura(id) {
+        function configuringAssinatura(id) {
             const canvas = document.getElementById(id);
             if(!canvas) return;
             const ctx = canvas.getContext("2d");
@@ -463,11 +575,12 @@
 
         window.onload = () => {
             document.getElementById('data-atual').innerText = new Date().toLocaleDateString('pt-BR');
-            atualizarSegundaCaixa(); // Inicializa o segundo select e define a primeira logo
+            atualizarSegundaCaixa(); 
             carregarDados();
+            escanearRepositorioMusicas(); // Roda a varredura automática ao iniciar
             criarLinhaPeca();
-            configurarAssinatura('pad-tecnico');
-            configurarAssinatura('pad-empresa');
+            configuringAssinatura('pad-tecnico');
+            configuringAssinatura('pad-empresa');
         };
 
         window.onclick = e => { if (!e.target.matches('.input-nome-peca')) document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none'); }
