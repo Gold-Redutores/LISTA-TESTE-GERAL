@@ -74,15 +74,15 @@
         .signature-pad { border: 1px solid #eee; background: #fff; width: 95%; height: 80px; cursor: crosshair; touch-action: none; }
         .name-input { border-bottom: 1px dashed #ccc !important; width: 90%; margin-bottom: 5px; text-align: center; font-weight: bold; text-transform: uppercase; }
         
-        /* Layout Multimídia Corrigido */
+        /* Layout Multimídia */
         .music-layout { display: flex; gap: 15px; margin-top: 10px; }
         .music-controls { flex: 1; background: #f9f9f9; padding: 12px; border: 1px solid #333; }
         .playlist-box { flex: 1; background: #fff; border: 1px solid #333; max-height: 160px; overflow-y: auto; }
-        .music-item { padding: 6px 10px; font-size: 11px; cursor: pointer; border-bottom: 1px solid #eee; color: #333; }
+        .music-item { padding: 6px 10px; font-size: 11px; cursor: pointer; border-bottom: 1px solid #eee; color: #333; line-height: 1.4; }
         .music-item:hover { background: #eee; color: #003366; font-weight: bold; }
         .music-item.playing { background: #ed1c24; color: white; font-weight: bold; }
         audio { width: 100%; margin-top: 10px; }
-        .music-status { font-size: 10px; color: #666; display: block; margin-top: 2px; }
+        .music-status { font-size: 10px; color: #666; display: block; margin-top: 4px; }
 
         .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 40px; padding-bottom: 50px; }
         .btn-action { padding: 12px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
@@ -192,7 +192,7 @@
     <div class="music-layout no-print">
         <div class="music-controls">
             <label style="font-size: 11px; font-weight: bold; color: #003366; display: block; margin-bottom: 5px;">SELECIONE A PASTA DE MÚSICAS:</label>
-            <select id="select-pastas" class="select-header" style="width: 100%; font-size: 12px;" onchange="listarMusicasDaPasta()">
+            <select id="select-pastas" class="select-header" style="width: 100%; font-size: 12px;" onchange="listarMusicasGitHub()">
                 <option value="amado batista dinamite de amor">amado batista dinamite de amor</option>
                 <option value="As velhinhas">As velhinhas</option>
                 <option value="AS VELHINHAS DA RICK SOM">AS VELHINHAS DA RICK SOM</option>
@@ -210,12 +210,13 @@
             <div style="margin-top: 12px;">
                 <span id="current-track-title" style="font-size: 11px; font-weight: bold; color: #ed1c24; display:block; min-height: 15px;">Nenhuma música tocando</span>
                 <audio id="audio-player" controls></audio>
-                <span id="repo-music-status" class="music-status">Conectado ao repositório de mídias.</span>
+                <span id="repo-music-status" class="music-status">Pronto para escanear diretórios.</span>
             </div>
         </div>
         
         <div class="playlist-box" id="lista-musicas">
-            </div>
+            <div style="padding:10px; font-size:11px; color:#666;">Escolha uma pasta para listar os arquivos...</div>
+        </div>
     </div>
 
     <div class="section">CONCLUSÕES</div>
@@ -257,7 +258,7 @@
         const URL_CSV_OS = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/main/dmsoser00000045.csv';
         const URL_CSV_PRODUTOS = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/refs/heads/main/relalisatagemprodutosdetada.csv';
         
-        // URL Base Unificada para streaming direto (Raw)
+        // URL Base para buscar arquivos MP3 direto via Raw do GitHub
         const URL_BASE_STREAM = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/main/';
 
         let dadosOS = []; let listaProdutos = [];
@@ -267,23 +268,6 @@
             "REDUTORES": { opcoes: ["1", "2", "3"], logo: "GOLD REDUTORES.JPG" },
             "MAQUINAS": { opcoes: ["1", "5", "6", "7"], logo: "GOLD MAQUINAS.png" }, 
             "DRIVES": { opcoes: ["8", "9", "0"], logo: "GOLD DRIVES.png" }
-        };
-
-        // Estruturação nominal limpa e nativa de indexação de faixas sequenciais por álbum
-        // Evita as falhas de conexões da API e garante carregamento imediato
-        const playlistsPredefinidas = {
-            "amado batista dinamite de amor": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3", "Faixa 06.mp3", "Faixa 07.mp3", "Faixa 08.mp3", "Faixa 09.mp3", "Faixa 10.mp3"],
-            "As velhinhas": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3", "Faixa 06.mp3", "Faixa 07.mp3", "Faixa 08.mp3", "Faixa 09.mp3", "Faixa 10.mp3"],
-            "AS VELHINHAS DA RICK SOM": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3", "Faixa 06.mp3", "Faixa 07.mp3", "Faixa 08.mp3", "Faixa 09.mp3", "Faixa 10.mp3"],
-            "as velhinhas dance vol 01": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3", "Faixa 06.mp3", "Faixa 07.mp3", "Faixa 08.mp3", "Faixa 09.mp3", "Faixa 10.mp3"],
-            "as velhinhas dance vol 02": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3", "Faixa 06.mp3", "Faixa 07.mp3", "Faixa 08.mp3", "Faixa 09.mp3", "Faixa 10.mp3"],
-            "CLASSICOS SERTANEJO ANOS 80 90": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3", "Faixa 06.mp3", "Faixa 07.mp3", "Faixa 08.mp3", "Faixa 09.mp3", "Faixa 10.mp3"],
-            "dj celso": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3"],
-            "FHASBACK 41 MUSICAS": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3", "Faixa 06.mp3", "Faixa 07.mp3", "Faixa 08.mp3", "Faixa 09.mp3", "Faixa 10.mp3"],
-            "FLASH BACK 01": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3"],
-            "Flash Back Anos 80": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3", "Faixa 06.mp3", "Faixa 07.mp3", "Faixa 08.mp3", "Faixa 09.mp3", "Faixa 10.mp3"],
-            "Flash Back Anos 90": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3", "Faixa 06.mp3", "Faixa 07.mp3", "Faixa 08.mp3", "Faixa 09.mp3", "Faixa 10.mp3"],
-            "flash back o melhor": ["Faixa 01.mp3", "Faixa 02.mp3", "Faixa 03.mp3", "Faixa 04.mp3", "Faixa 05.mp3"]
         };
 
         function atualizarSegundaCaixa() {
@@ -304,46 +288,74 @@
             imgLogo.alt = "Gold " + empresaSelecionada.charAt(0) + empresaSelecionada.slice(1).toLowerCase();
         }
 
-        // Nova função otimizada para listar as músicas sem depender de indexadores externos instáveis
-        function listarMusicasDaPasta() {
-            const pastaSelecionada = document.getElementById('select-pastas').value;
+        // NOVA FUNÇÃO: Faz a leitura REAL dos arquivos internos usando a API pública e aberta do jsDelivr para o seu repositório
+        function listarMusicasGitHub() {
+            const pasta = document.getElementById('select-pastas').value;
             const containerLista = document.getElementById('lista-musicas');
-            containerLista.innerHTML = '';
+            const statusLabel = document.getElementById('repo-music-status');
+            
+            containerLista.innerHTML = '<div style="padding:10px; font-size:11px; color:#666;">🔍 Escaneando arquivos internos da pasta...</div>';
+            statusLabel.innerText = "Buscando músicas...";
 
-            const musicas = playlistsPredefinidas[pastaSelecionada] || [];
+            // Endpoint da API de dados do jsDelivr que lê a estrutura real do seu repositório do GitHub sem bloqueios
+            const urlApiData = `https://data.jsdelivr.com/v1/repos/gh/Gold-Redutores/PRENCHIMENTO-OS-GOLD/contents/${encodeURIComponent(pasta)}`;
 
-            musicas.forEach((musica, index) => {
-                const item = document.createElement('div');
-                item.className = 'music-item';
-                // Mostra um layout limpo de listagem (Ex: "Faixa 01", "Faixa 02")
-                item.innerText = `${pastaSelecionada.toUpperCase()} - Mídia ${index + 1}`; 
-                
-                item.onclick = function() {
-                    document.querySelectorAll('.music-item').forEach(el => el.classList.remove('playing'));
-                    item.classList.add('playing');
-                    tocarMusicaGitHub(pastaSelecionada, musica, item.innerText);
-                };
-                containerLista.appendChild(item);
-            });
+            fetch(urlApiData)
+                .then(res => {
+                    if (!res.ok) throw new Error("Erro de conexão");
+                    return res.json();
+                })
+                .then(arquivos => {
+                    // Filtra na lista apenas os arquivos que terminam com a extensão de áudio .mp3
+                    const musicasFiltradas = arquivos.filter(arq => arq.name.toLowerCase().endsWith('.mp3'));
+
+                    containerLista.innerHTML = '';
+
+                    if (musicasFiltradas.length === 0) {
+                        containerLista.innerHTML = '<div style="padding:10px; font-size:11px; color:#ed1c24;">Nenhum arquivo de áudio (.mp3) localizado dentro desta pasta no GitHub.</div>';
+                        statusLabel.innerText = "Nenhuma música encontrada.";
+                        return;
+                    }
+
+                    statusLabel.innerText = `✅ ${musicasFiltradas.length} músicas encontradas na pasta!`;
+
+                    // Cria os botões na tela com os nomes reais das faixas encontradas
+                    musicasFiltradas.forEach(musica => {
+                        const item = document.createElement('div');
+                        item.className = 'music-item';
+                        item.innerText = musica.name.replace('.mp3', ''); // Mostra o nome real da música sem o .mp3 no final
+                        
+                        item.onclick = function() {
+                            document.querySelectorAll('.music-item').forEach(el => el.classList.remove('playing'));
+                            item.classList.add('playing');
+                            tocarFaixaReal(pasta, musica.name);
+                        };
+                        containerLista.appendChild(item);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    containerLista.innerHTML = '<div style="padding:10px; font-size:11px; color:#ed1c24;">Erro ao acessar os arquivos desta pasta no servidor do GitHub. Verifique a conexão ou o nome do diretório.</div>';
+                    statusLabel.innerText = "Falha no escaneamento.";
+                });
         }
 
-        function tocarMusicaGitHub(pasta, arquivo, tituloVisual) {
+        function tocarFaixaReal(pasta, nomeArquivo) {
             const player = document.getElementById('audio-player');
             const txtTitulo = document.getElementById('current-track-title');
             
-            // Corrige automaticamente caminhos com espaços e caracteres especiais para formato web (%20)
-            const urlFinalAudio = URL_BASE_STREAM + encodeURIComponent(pasta) + "/" + encodeURIComponent(arquivo);
+            // Monta o link de transmissão raw corrigindo espaços e caracteres especiais automaticamente
+            const urlFinalAudio = URL_BASE_STREAM + encodeURIComponent(pasta) + "/" + encodeURIComponent(nomeArquivo);
             
             player.src = urlFinalAudio;
-            txtTitulo.innerText = "Conectando: " + tituloVisual;
+            txtTitulo.innerText = "Carregando áudio...";
             
             player.play()
                 .then(() => {
-                    txtTitulo.innerText = "Tocando: " + tituloVisual;
+                    txtTitulo.innerText = "Tocando: " + nomeArquivo.replace('.mp3', '');
                 })
                 .catch(err => {
-                    txtTitulo.innerText = "Mídia indisponível nesta pasta.";
-                    console.log("Arquivo não localizado ou erro de carregamento no link raw:", urlFinalAudio);
+                    txtTitulo.innerText = "Erro ao reproduzir arquivo do servidor.";
                 });
         }
 
@@ -560,7 +572,7 @@
             document.getElementById('data-atual').innerText = new Date().toLocaleDateString('pt-BR');
             atualizarSegundaCaixa(); 
             carregarDados();
-            listarMusicasDaPasta(); // Inicializa preenchendo as faixas do primeiro item do select
+            listarMusicasGitHub(); // Faz a leitura automática da primeira pasta ("amado batista...") ao abrir a tela
             criarLinhaPeca();
             configurarAssinatura('pad-tecnico');
             configurarAssinatura('pad-empresa');
