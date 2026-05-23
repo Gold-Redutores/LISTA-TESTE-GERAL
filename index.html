@@ -90,10 +90,8 @@
 
     <header class="header-container">
         <div class="logo-box">
-            <!-- O Logo muda dinamicamente via JS com base na seleção -->
+            <!-- Apenas uma tag de imagem agora, mudando a origem (src) dinamicamente -->
             <img id="dinamic-logo" class="brand-logo" src="GOLD REDUTORES.JPG" alt="Gold Redutores">
-            <img id="dinamic-logo" class="brand-logo" src="GOLD MAQUINAS.png" alt="Gold Máquinas">
-            <img id="dinamic-logo" class="brand-logo" src="GOLD DRIVES.png" alt="GOLD DRIVES">
         </div>
 
         <div class="title-area">
@@ -225,11 +223,11 @@
         let dadosOS = []; let listaProdutos = [];
         let padsEmUso = {};
 
-        // Configuração dos dados das caixas de combinação dinâmicas
+        // Configuração dos dados das caixas de combinação dinâmicas e caminhos das imagens
         const opcoesPorEmpresa = {
             "REDUTORES": { opcoes: ["1", "2", "3"], logo: "GOLD REDUTORES.JPG" },
-            "MAQUINAS": { opcoes: ["1", "5", "6", "7"], logo: "GOLD MAQUINAS.JPG" }, // Certifique-se de que a imagem existe ou use extensão correta
-            "DRIVES": { opcoes: ["8", "9", "0"], logo: "GOLD DRIVES.JPG" }
+            "MAQUINAS": { opcoes: ["1", "5", "6", "7"], logo: "GOLD MAQUINAS.png" }, 
+            "DRIVES": { opcoes: ["8", "9", "0"], logo: "GOLD DRIVES.png" }
         };
 
         function atualizarSegundaCaixa() {
@@ -249,35 +247,35 @@
                 selectOpcoes.appendChild(elOpt);
             });
 
-            // Atualiza dinamicamente a imagem do logo e o alt text
+            // Atualiza dinamicamente o SRC da imagem única
             imgLogo.src = dados.logo;
             imgLogo.alt = "Gold " + empresaSelecionada.charAt(0) + empresaSelecionada.slice(1).toLowerCase();
         }
 
         function parseCSV(text) {
-            let linhas = []; let linhaAtual = []; let campoAtual = ''; let dentroDeAspas = false;
+            let lines = []; let currentLine = []; let currentField = ''; let insideQuotes = false;
             for (let i = 0; i < text.length; i++) {
-                let char = text[i]; let proximoChar = text[i + 1];
+                let char = text[i]; let nextChar = text[i + 1];
                 if (char === '"') {
-                    if (dentroDeAspas && proximoChar === '"') { campoAtual += '"'; i++; } 
-                    else { dentroDeAspas = !dentroDeAspas; }
+                    if (insideQuotes && nextChar === '"') { currentField += '"'; i++; } 
+                    else { insideQuotes = !insideQuotes; }
                 } 
-                else if (char === ',' && !dentroDeAspas) {
-                    linhaAtual.push(campoAtual.replace(/^"|"$/g, '').trim()); campoAtual = '';
+                else if (char === ',' && !insideQuotes) {
+                    currentLine.push(currentField.replace(/^"|"$/g, '').trim()); currentField = '';
                 } 
-                else if ((char === '\n' || char === '\r') && !dentroDeAspas) {
-                    if (char === '\r' && proximoChar === '\n') i++;
-                    linhaAtual.push(campoAtual.replace(/^"|"$/g, '').trim());
-                    if (linhaAtual.length > 5) linhas.push(linhaAtual);
-                    linhaAtual = []; campoAtual = '';
+                else if ((char === '\n' || char === '\r') && !insideQuotes) {
+                    if (char === '\r' && nextChar === '\n') i++;
+                    currentLine.push(currentField.replace(/^"|"$/g, '').trim());
+                    if (currentLine.length > 5) lines.push(currentLine);
+                    currentLine = []; currentField = '';
                 } 
-                else { campoAtual += char; }
+                else { currentField += char; }
             }
-            if (campoAtual || linhaAtual.length > 0) {
-                linhaAtual.push(campoAtual.replace(/^"|"$/g, '').trim());
-                if (linhaAtual.length > 5) linhas.push(linhaAtual);
+            if (currentField || currentLine.length > 0) {
+                currentLine.push(currentField.replace(/^"|"$/g, '').trim());
+                if (currentLine.length > 5) lines.push(currentLine);
             }
-            return linhas;
+            return lines;
         }
 
         function carregarDados() {
@@ -424,13 +422,11 @@
         }
 
         function prepararHTML() {
-            // Sincroniza valores normais e as seleções dos selects
             document.querySelectorAll('input, textarea, select').forEach(i => {
                 if(i.type === "checkbox") {
                     if(i.checked) i.setAttribute('checked', 'checked');
                     else i.removeAttribute('checked');
                 } else if(i.tagName === "SELECT") {
-                    // Mantém a opção selecionada gravada no código HTML salvo
                     for (let opt of i.options) {
                         if (opt.value === i.value) opt.setAttribute('selected', 'selected');
                         else opt.removeAttribute('selected');
@@ -467,7 +463,7 @@
 
         window.onload = () => {
             document.getElementById('data-atual').innerText = new Date().toLocaleDateString('pt-BR');
-            atualizarSegundaCaixa(); // Inicializa o segundo select
+            atualizarSegundaCaixa(); // Inicializa o segundo select e define a primeira logo
             carregarDados();
             criarLinhaPeca();
             configurarAssinatura('pad-tecnico');
