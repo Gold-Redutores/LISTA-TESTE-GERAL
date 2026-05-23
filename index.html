@@ -2,13 +2,10 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Relatório de Manutenção - Gold Redutores</title>
+    <title>Relatório de Manutenção - Grupo Gold</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; color: #003366; background-color: #fff; }
         
-        /* ============================================================
-           MODIFICAÇÃO: NOVO SISTEMA DE CABEÇALHO PARA ALINHAMENTO 
-           ============================================================ */
         .header-container {
             display: flex;
             align-items: center; 
@@ -19,8 +16,10 @@
         }
 
         .brand-logo {
-            max-height: 80px; /* Ajuste o tamanho do logo aqui */
+            max-height: 80px;
             width: auto;
+            font-weight: bold;
+            font-size: 20px;
         }
 
         .title-area {
@@ -30,30 +29,28 @@
 
         .title-area h2 {
             margin: 0;
-            font-size: 22px;
+            font-size: 20px;
             text-transform: uppercase;
             color: #003366;
         }
 
-        .subtitle {
-            margin: 5px 0 0 0;
-            font-size: 13px;
-            color: #666;
-            font-weight: normal;
+        .select-header {
+            padding: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #003366;
+            border: 1px solid #333;
+            background: #f4f4f4;
+            border-radius: 4px;
         }
-
-        /* Espaçador para garantir que o título fique no centro real */
-        .header-spacer {
-            width: 120px; 
-        }
-        /* ============================================================ */
 
         .section { background: #d9d9d9; padding: 6px; margin-top: 15px; font-weight: bold; text-align: center; border: 1px solid #333; text-transform: uppercase; font-size: 13px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 0; }
         table, th, td { border: 1px solid #333; }
         td { padding: 6px; font-size: 11px; vertical-align: middle; }
         th { background: #eee; padding: 8px; font-size: 11px; text-align: center; color: #003366; }
-        input[type="text"], input[type="number"], textarea { width: 98%; border: none; outline: none; background: transparent; font-size: 11px; color: #000; }
+        input[type="text"], input[type="number"], textarea, select { width: 98%; border: none; outline: none; background: transparent; font-size: 11px; color: #000; }
+        select { cursor: pointer; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
 
         .checkbox-container { display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .checkbox-container input { width: auto; margin: 0; }
@@ -68,7 +65,7 @@
         .suggestion-item:hover { background-color: #ed1c24; color: white; }
 
         .foto-upload-container { text-align: center; padding: 15px; background: #f4f4f4; border: 2px dashed #ccc; margin: 10px 0; border-radius: 5px; }
-        .foto-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 05px; }
+        .foto-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
         .foto-item { border: 1px solid #333; padding: 8px; text-align: center; background: #fff; position: relative; page-break-inside: avoid; display: flex; flex-direction: column; }
         .foto-preview { max-width: 100%; height: auto; max-height: 300px; object-fit: contain; margin-bottom: 8px; }
 
@@ -85,6 +82,7 @@
             body { padding: 0; margin: 0; } 
             .signature-pad { border: none; }
             .header-container { border-bottom: 3px solid #ed1c24 !important; }
+            select { border: none !important; background: transparent !important; font-size: 14px !important; font-weight: bold !important; }
         }
     </style>
 </head>
@@ -92,14 +90,28 @@
 
     <header class="header-container">
         <div class="logo-box">
-            <img class="brand-logo" src="GOLD REDUTORES.JPG" alt="Gold Redutores">
+            <!-- O Logo muda dinamicamente via JS com base na seleção -->
+            <img id="dinamic-logo" class="brand-logo" src="GOLD REDUTORES.JPG" alt="Gold Redutores">
         </div>
 
         <div class="title-area">
             <h2>RELATÓRIO DE MANUTENÇÃO PREVENTIVA</h2>
+            <!-- Primeira Caixa de Combinação: Seleção da Empresa -->
+            <select id="select-empresa" class="select-header" onchange="atualizarSegundaCaixa()" style="width: auto; margin-top: 5px; text-align: center;">
+                <option value="REDUTORES">GOLD REDUTORES</option>
+                <option value="MAQUINAS">GOLD MÁQUINAS</option>
+                <option value="DRIVES">GOLD DRIVES</option>
+            </select>
         </div>
-
-        </header>
+        
+        <div class="header-box" style="text-align: right;">
+            <label style="font-size: 11px; font-weight: bold; display:block; color: #003366; margin-bottom: 2px;">OPÇÃO / FILTRO:</label>
+            <!-- Segunda Caixa de Combinação: Depende do resultado da primeira -->
+            <select id="select-opcoes" class="select-header" style="width: 120px; text-align: center;">
+                <!-- Opções serão inseridas via JavaScript -->
+            </select>
+        </div>
+    </header>
 
     <div style="text-align: center; margin-bottom: 20px;">
         <label style="font-weight: bold; color: #003366;">Nº ORDEM DE SERVIÇO: </label>
@@ -179,7 +191,7 @@
                 <td style="border: 1px solid #333; padding: 0; background: #fafafa;">
                     <div style="text-align: center; padding: 10px;">
                         <input type="text" class="name-input" placeholder="NOME DO TÉCNICO (LEGÍVEL)">
-                        <div style="height: 90px; display: flex; align-items: center; justify-content: center;">
+                        <div style="height: 90px; display: flex; align-items: center; justify-content: center;" class="sig-wrapper" data-pad="pad-tecnico">
                             <canvas id="pad-tecnico" class="signature-pad"></canvas>
                         </div>
                         <button class="no-print" onclick="limparAssinatura('pad-tecnico')" style="font-size: 9px; margin-top: 5px;">Limpar</button>
@@ -189,7 +201,7 @@
                 <td style="border: 1px solid #333; padding: 0; background: #fafafa;">
                     <div style="text-align: center; padding: 10px;">
                         <input type="text" class="name-input" placeholder="NOME DO RESPONSÁVEL (LEGÍVEL)">
-                        <div style="height: 90px; display: flex; align-items: center; justify-content: center;">
+                        <div style="height: 90px; display: flex; align-items: center; justify-content: center;" class="sig-wrapper" data-pad="pad-empresa">
                             <canvas id="pad-empresa" class="signature-pad"></canvas>
                         </div>
                         <button class="no-print" onclick="limparAssinatura('pad-empresa')" style="font-size: 9px; margin-top: 5px;">Limpar</button>
@@ -209,27 +221,47 @@
         const URL_CSV_OS = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/main/dmsoser00000045.csv';
         const URL_CSV_PRODUTOS = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/refs/heads/main/relalisatagemprodutosdetada.csv';
         let dadosOS = []; let listaProdutos = [];
+        let padsEmUso = {};
+
+        // Configuração dos dados das caixas de combinação dinâmicas
+        const opcoesPorEmpresa = {
+            "REDUTORES": { opcoes: ["1", "2", "3"], logo: "GOLD REDUTORES.JPG" },
+            "MAQUINAS": { opcoes: ["1", "5", "6", "7"], logo: "GOLD MAQUINAS.JPG" }, // Certifique-se de que a imagem existe ou use extensão correta
+            "DRIVES": { opcoes: ["8", "9", "0"], logo: "GOLD DRIVES.JPG" }
+        };
+
+        function atualizarSegundaCaixa() {
+            const empresaSelecionada = document.getElementById('select-empresa').value;
+            const selectOpcoes = document.getElementById('select-opcoes');
+            const imgLogo = document.getElementById('dinamic-logo');
+            
+            // Limpa opções anteriores
+            selectOpcoes.innerHTML = '';
+            
+            // Adiciona novas opções baseadas na seleção
+            const dados = opcoesPorEmpresa[empresaSelecionada];
+            dados.opcoes.forEach(opcao => {
+                const elOpt = document.createElement('option');
+                elOpt.value = opcao;
+                elOpt.innerText = opcao;
+                selectOpcoes.appendChild(elOpt);
+            });
+
+            // Atualiza dinamicamente a imagem do logo e o alt text
+            imgLogo.src = dados.logo;
+            imgLogo.alt = "Gold " + empresaSelecionada.charAt(0) + empresaSelecionada.slice(1).toLowerCase();
+        }
 
         function parseCSV(text) {
-            let linhas = [];
-            let linhaAtual = [];
-            let campoAtual = '';
-            let dentroDeAspas = false;
-
+            let linhas = []; let linhaAtual = []; let campoAtual = ''; let dentroDeAspas = false;
             for (let i = 0; i < text.length; i++) {
-                let char = text[i];
-                let proximoChar = text[i + 1];
-
+                let char = text[i]; let proximoChar = text[i + 1];
                 if (char === '"') {
-                    if (dentroDeAspas && proximoChar === '"') {
-                        campoAtual += '"'; i++;
-                    } else {
-                        dentroDeAspas = !dentroDeAspas;
-                    }
+                    if (dentroDeAspas && proximoChar === '"') { campoAtual += '"'; i++; } 
+                    else { dentroDeAspas = !dentroDeAspas; }
                 } 
                 else if (char === ',' && !dentroDeAspas) {
-                    linhaAtual.push(campoAtual.replace(/^"|"$/g, '').trim());
-                    campoAtual = '';
+                    linhaAtual.push(campoAtual.replace(/^"|"$/g, '').trim()); campoAtual = '';
                 } 
                 else if ((char === '\n' || char === '\r') && !dentroDeAspas) {
                     if (char === '\r' && proximoChar === '\n') i++;
@@ -237,9 +269,7 @@
                     if (linhaAtual.length > 5) linhas.push(linhaAtual);
                     linhaAtual = []; campoAtual = '';
                 } 
-                else {
-                    campoAtual += char;
-                }
+                else { campoAtual += char; }
             }
             if (campoAtual || linhaAtual.length > 0) {
                 linhaAtual.push(campoAtual.replace(/^"|"$/g, '').trim());
@@ -266,7 +296,14 @@
 
         function buscarDadosOS() {
             const osVal = document.getElementById('input-os').value.trim();
-            if (osVal.length < 3) return;
+            const ids = ['campo-serie', 'campo-redutor', 'campo-cliente'];
+            if (osVal.length < 3) {
+                ids.forEach(id => {
+                    let input = document.getElementById(id);
+                    input.value = ""; input.removeAttribute('value');
+                });
+                return;
+            }
             const linha = dadosOS.find(l => l[21] === osVal);
             if (linha) {
                 const campos = { 'campo-serie': 23, 'campo-redutor': 24, 'campo-cliente': 26 };
@@ -312,10 +349,8 @@
                         const nome = p[22] || '';
                         div.innerText = codigo + " | " + nome; 
                         div.onclick = () => {
-                            input.value = nome; 
-                            input.setAttribute('value', nome);
-                            codInput.value = codigo;
-                            codInput.setAttribute('value', codigo);
+                            input.value = nome; input.setAttribute('value', nome);
+                            codInput.value = codigo; codInput.setAttribute('value', codigo);
                             sugestoes.style.display = 'none';
                             const todasLinhas = document.querySelectorAll('#tabela-pecas tr');
                             if (tr === todasLinhas[todasLinhas.length - 1]) criarLinhaPeca();
@@ -351,6 +386,7 @@
             let desenhando = false;
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
+            padsEmUso[id] = false;
 
             function obterPos(e) {
                 const rect = canvas.getBoundingClientRect();
@@ -359,7 +395,7 @@
                 return { x: clientX - rect.left, y: clientY - rect.top };
             }
 
-            function iniciar(e) { desenhando = true; mover(e); }
+            function iniciar(e) { desenhando = true; mover(e); padsEmUso[id] = true; }
             function parar() { desenhando = false; ctx.beginPath(); }
             function mover(e) {
                 if (!desenhando) return;
@@ -382,19 +418,39 @@
             const canvas = document.getElementById(id);
             const ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            padsEmUso[id] = false;
         }
 
         function prepararHTML() {
-            document.querySelectorAll('input, textarea').forEach(i => {
+            // Sincroniza valores normais e as seleções dos selects
+            document.querySelectorAll('input, textarea, select').forEach(i => {
                 if(i.type === "checkbox") {
                     if(i.checked) i.setAttribute('checked', 'checked');
                     else i.removeAttribute('checked');
+                } else if(i.tagName === "SELECT") {
+                    // Mantém a opção selecionada gravada no código HTML salvo
+                    for (let opt of i.options) {
+                        if (opt.value === i.value) opt.setAttribute('selected', 'selected');
+                        else opt.removeAttribute('selected');
+                    }
                 } else {
                     i.setAttribute('value', i.value);
                     if(i.tagName === "TEXTAREA") i.innerHTML = i.value;
                 }
             });
-            return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+            let cloneDoc = document.documentElement.cloneNode(true);
+            
+            ['pad-tecnico', 'pad-empresa'].forEach(id => {
+                const canvasOriginal = document.getElementById(id);
+                const wrapperClone = cloneDoc.querySelector(`.sig-wrapper[data-pad="${id}"]`);
+                if (canvasOriginal && wrapperClone && padsEmUso[id]) {
+                    const dataURL = canvasOriginal.toDataURL("image/png");
+                    wrapperClone.innerHTML = `<img src="${dataURL}" style="max-height:80px; width:auto;" />`;
+                }
+            });
+
+            return "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
         }
 
         function salvarHTML() {
@@ -409,6 +465,7 @@
 
         window.onload = () => {
             document.getElementById('data-atual').innerText = new Date().toLocaleDateString('pt-BR');
+            atualizarSegundaCaixa(); // Inicializa o segundo select
             carregarDados();
             criarLinhaPeca();
             configurarAssinatura('pad-tecnico');
