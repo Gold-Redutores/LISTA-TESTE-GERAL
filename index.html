@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Relatório de Manutenção - Grupo Gold</title>
     <style>
+        /* Estilos Globais do Relatório */
         body { font-family: Arial, sans-serif; margin: 20px; color: #003366; background-color: #fff; }
         
         .header-container {
@@ -73,9 +74,125 @@
 
         .signature-pad { border: 1px solid #eee; background: #fff; width: 95%; height: 80px; cursor: crosshair; touch-action: none; }
         .name-input { border-bottom: 1px dashed #ccc !important; width: 90%; margin-bottom: 5px; text-align: center; font-weight: bold; text-transform: uppercase; }
-        
-    
 
+        .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 40px; padding-bottom: 50px; }
+        .btn-action { padding: 12px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
+
+        /* Estilos Integrados do Pure CSS3 Slider */
+        #slider {
+            width: 100%;
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 15px;
+            border: 1px solid #333;
+        }
+        .slides {
+            width: 400%;
+            height: 100%;
+            position: relative;
+            -webkit-animation: slide 30s infinite;
+            -moz-animation: slide 30s infinite;
+            animation: slide 30s infinite;
+        }
+        .slider {
+            width: 25%;
+            height: 100%;
+            float: left;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .image {
+            width: 100%;
+            height: 100%;
+        }
+        .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .legend {
+            border: 500px solid transparent;
+            border-left: 800px solid rgba(23,117,177,1);
+            border-bottom: 0;
+            position: absolute;
+            bottom: 0;
+            z-index: 2;
+        }
+        .content {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            overflow: hidden;
+            z-index: 3;
+        }
+        .content-txt {
+            width: 400px;
+            height: 150px;
+            float: left;
+            position: relative;
+            top: 300px;
+            -webkit-animation: content-s 7.5s infinite;
+            -moz-animation: content-s 7.5s infinite;
+            animation: content-s 7.5s infinite;
+        }
+        .content-txt h1 {
+            font-family: Arial;
+            text-transform: uppercase;
+            font-size: 24px;
+            color: #fff;
+            text-align: left;
+            margin-left: 30px;
+            padding-bottom: 10px;
+        }
+        .content-txt h2 {
+            font-family: Arial;
+            font-weight: normal;
+            font-size: 14px;
+            font-style: italic;
+            color: #fff;
+            text-align: left;
+            margin-left: 30px;
+        }
+        .switch {
+            width: 120px;
+            height: 10px;
+            position: absolute;
+            bottom: 50px;
+            z-index: 99;
+            left: 30px;
+        }
+        .switch > ul { list-style: none; overflow: hidden; padding: 0; margin: 0; }
+        .switch > ul > li {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #333;
+            float: left;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        .on {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(23,117,177,1);
+            position: relative;
+            -webkit-animation: on 30s infinite;
+            -moz-animation: on 30s infinite;
+            animation: on 30s infinite;
+        }
+
+        /* Animações do Slider */
+        @-webkit-keyframes slide { 0%,100%{ margin-left:0%; } 21%{ margin-left:0%; } 25%{ margin-left:-100%; } 46%{ margin-left:-100%; } 50%{ margin-left:-200%; } 71%{ margin-left:-200%; } 75%{ margin-left:-300%; } 96%{ margin-left:-300%; } }
+        @keyframes slide { 0%,100%{ margin-left:0%; } 21%{ margin-left:0%; } 25%{ margin-left:-100%; } 46%{ margin-left:-100%; } 50%{ margin-left:-200%; } 71%{ margin-left:-200%; } 75%{ margin-left:-300%; } 96%{ margin-left:-300%; } }
+        @-webkit-keyframes content-s { 0%{left:-420px;} 10%{left:0px;} 30%{left:0px;} 40%{left:0px;} 50%{left:0px;} 60%{left:0px;} 70%{left:0;} 80%{left:-420px;} 90%{left:-420px;} 100%{left:-420px;} }
+        @keyframes content-s { 0%{left:-420px;} 10%{left:20px;} 15%{left:0px;} 30%{left:0px;} 40%{left:0px;} 50%{left:0px;} 60%{left:0px;} 70%{left:0;} 80%{left:-420px;} 90%{left:-420px;} 100%{left:-420px;} }
+        @-webkit-keyframes on { 0%,100%{ margin-left:0%; } 21%{ margin-left:0%; } 25%{ margin-left:15px; } 46%{ margin-left:15px; } 50%{ margin-left:30px; } 71%{ margin-left:30px; } 75%{ margin-left:45px; } 96%{ margin-left:45px; } }
+        @keyframes on { 0%,100%{ margin-left:0%; } 21%{ margin-left:0%; } 25%{ margin-left:15px; } 46%{ margin-left:15px; } 50%{ margin-left:30px; } 71%{ margin-left:30px; } 75%{ margin-left:45px; } 96%{ margin-left:45px; } }
+
+        /* Mídia para Impressão */
         @media print { 
             .no-print { display: none !important; } 
             body { padding: 0; margin: 0; } 
@@ -117,10 +234,111 @@
         <span id="db-status" style="font-size: 12px; font-weight: bold; color: orange;">⏳ Sincronizando com GitHub...</span>
     </div>
 
-  
-    <div class="section">ANÁLISES FOTOGRÁFICAS</div>
+    <div class="section">DADOS DO CLIENTE E EQUIPAMENTO</div>
+    <table>
+        <tr>
+            <td colspan="2"><label><strong>Cliente:</strong></label> <input type="text" id="campo-cliente"></td>
+            <td colspan="2"><label><strong>Data:</strong></label> <span id="data-atual" style="font-weight: bold;"></span></td>
+        </tr>
+        <tr>
+            <td><label><strong>Equipamento:</strong></label> <input type="text" id="campo-redutor"></td>
+            <td><label><strong>Redução:</strong></label> <input type="text" id="campo-reducao" placeholder="Ex: 1:40"></td>
+            <td colspan="2"><label><strong>Série:</strong></label> <input type="text" id="campo-serie"></td>
+        </tr>
+    </table>
+
+    <div class="section" style="text-align: left; padding-left: 10px;">Serviço executado:</div>
+    <table>
+        <tr>
+            <td><label class="checkbox-container"><input type="checkbox"> Desligamento e retirada da base (15%)</label></td>
+            <td><label class="checkbox-container"><input type="checkbox"> Montagem (65%)</label></td>
+        </tr>
+        <tr>
+            <td><label class="checkbox-container"><input type="checkbox"> Desmont. de acoplam. e tampas (20%)</label></td>
+            <td><label class="checkbox-container"><input type="checkbox"> Montagem na base (75%)</label></td>
+        </tr>
+        <tr>
+            <td><label class="checkbox-container"><input type="checkbox"> Testes elétricos (25%)</label></td>
+            <td><label class="checkbox-container"><input type="checkbox"> Religação elétrica (85%)</label></td>
+        </tr>
+        <tr>
+            <td><label class="checkbox-container"><input type="checkbox"> Análise Eletromecânica (40%)</label></td>
+            <td><label class="checkbox-container"><input type="checkbox"> Alinhamento a laser (90%)</label></td>
+        </tr>
+        <tr>
+            <td><label class="checkbox-container"><input type="checkbox"> Troca de rolamentos (50%)</label></td>
+            <td><label class="checkbox-container"><input type="checkbox"> Acoplagem mecânica (100%)</label></td>
+        </tr>
+        <tr>
+            <td><label class="checkbox-container"><input type="checkbox"> Lubrificação dos rolamentos (55%)</label></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <div id="slider" class="no-print">
+        <div class="slides">
+            <div class="slider">
+                <div class="legend"></div>
+                <div class="content">
+                    <div class="content-txt">
+                        <h1>AP N450 UNIFI UAP-PRO</h1>
+                        <h2>Acessório de rede e conectividade de alta performance para ambientes industriais e corporativos.</h2>
+                    </div>
+                </div>
+                <div class="image">
+                    <img src="https://i.imgur.com/BEJRDmd.jpg">
+                </div>
+            </div>
+            <div class="slider">
+                <div class="legend"></div>
+                <div class="content">
+                    <div class="content-txt">
+                        <h1>adaptador USB wireless AC1300 T4U</h1>
+                        <h2>Dispositivo para conexão wireless estável de alta velocidade para computadores de diagnóstico de campo.</h2>
+                    </div>
+                </div>
+                <div class="image">
+                    <img src="https://i.imgur.com/fWndwki.jpg">
+                </div>
+            </div>
+            <div class="slider">
+                <div class="legend"></div>
+                <div class="content">
+                    <div class="content-txt">
+                        <h1>CAMERA IP HD WIRELLESS DCS-2130</h1>
+                        <h2>Monitoramento em alta definição para segurança de perímetros e processos internos automatizados.</h2>
+                    </div>
+                </div>
+                <div class="image">
+                    <img src="https://i.imgur.com/VH2lrAO.jpg">
+                </div>
+            </div>
+            <div class="slider">
+                <div class="legend"></div>
+                <div class="content">
+                    <div class="content-txt">
+                        <h1>CAMERA BULLET 720 L 2.8MM IR20 BR VM 3120</h1>
+                        <h2>Câmera infravermelho de longo alcance e alta vedação para monitoramento externo de galpões e pátios.</h2>
+                    </div>
+                </div>
+                <div class="image">
+                    <img src="https://i.imgur.com/iXvbyEG.jpg">
+                </div>
+            </div>
+        </div>
+        <div class="switch">
+            <ul>
+                <li><div class="on"></div></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">ANÁLISES FOTOGRÁFICAS DO RELATÓRIO</div>
     <div class="foto-upload-container no-print">
-        <label style="font-weight: bold; display: block; margin-bottom: 5px;">📸 ADICIONAR FOTOS</label>
+        <label style="font-weight: bold; display: block; margin-bottom: 5px;">📸 ADICIONAR FOTOS DO SERVIÇO</label>
         <input type="file" accept="image/*" multiple onchange="previewFotos(event)">
     </div>
     <div id="container-fotos" class="foto-container"></div>
@@ -137,7 +355,6 @@
         <tbody id="tabela-pecas"></tbody>
     </table>
 
-    
     <div class="section">CONCLUSÕES</div>
     <textarea id="conclusoes" rows="5" style="width: 100%; border: 1px solid #333; margin-top: 5px; padding: 8px;" placeholder="Parecer técnico final..."></textarea>
 
@@ -168,14 +385,14 @@
         </table>
     </div>
 
-
+    <div class="btn-group no-print">
+        <button class="btn-action" style="background: #003366;" onclick="salvarHTML()">SALVAR ARQUIVO (.HTML)</button>
+        <button class="btn-action" style="background: #ed1c24;" onclick="window.print()">GERAR PDF / IMPRIMIR</button>
+    </div>
 
     <script>
         const URL_CSV_OS = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/main/dmsoser00000045.csv';
         const URL_CSV_PRODUTOS = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/refs/heads/main/relalisatagemprodutosdetada.csv';
-        
-        // URL Base para buscar arquivos MP3 direto via link direto do GitHub
-        const URL_BASE_STREAM = 'https://raw.githubusercontent.com/Gold-Redutores/PRENCHIMENTO-OS-GOLD/main/';
 
         let dadosOS = []; let listaProdutos = [];
         let padsEmUso = {};
@@ -186,9 +403,24 @@
             "DRIVES": { opcoes: ["8", "9", "0"], logo: "GOLD DRIVES.png" }
         };
 
-      
+        function atualizarSegundaCaixa() {
+            const empresaSelecionada = document.getElementById('select-empresa').value;
+            const selectOpcoes = document.getElementById('select-opcoes');
+            const imgLogo = document.getElementById('dinamic-logo');
+            
+            selectOpcoes.innerHTML = '';
+            const dados = opcoesPorEmpresa[empresaSelecionada];
+            dados.opcoes.forEach(opcao => {
+                const elOpt = document.createElement('option');
+                elOpt.value = opcao;
+                elOpt.innerText = opcao;
+                selectOpcoes.appendChild(elOpt);
+            });
 
-       
+            imgLogo.src = dados.logo;
+            imgLogo.alt = "Gold " + empresaSelecionada.charAt(0) + empresaSelecionada.slice(1).toLowerCase();
+        }
+
         function parseCSV(text) {
             let lines = []; let currentLine = []; let currentField = ''; let insideQuotes = false;
             for (let i = 0; i < text.length; i++) {
@@ -246,7 +478,7 @@
                 const campos = { 'campo-serie': 23, 'campo-redutor': 24, 'campo-cliente': 26 };
                 for (let id in campos) {
                     let input = document.getElementById(id);
-                    input.value = edge = linha[campos[id]] || "";
+                    input.value = linha[campos[id]] || "";
                     input.setAttribute('value', input.value);
                 }
             }
@@ -402,7 +634,6 @@
             document.getElementById('data-atual').innerText = new Date().toLocaleDateString('pt-BR');
             atualizarSegundaCaixa(); 
             carregarDados();
-            listarMusicasLocais(); // Abre listando as faixas mapeadas do Amado Batista
             criarLinhaPeca();
             configurarAssinatura('pad-tecnico');
             configurarAssinatura('pad-empresa');
@@ -411,415 +642,4 @@
         window.onclick = e => { if (!e.target.matches('.input-nome-peca')) document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none'); }
     </script>
 </body>
-
-    <html lang="pt-br" >
-
-<head>
-  <meta charset="UTF-8">
-  <title>Pure CSS3 slider</title>
-  
-  
-  
-      <link rel="stylesheet" href="css/style.css">
-
-  
-</head>
-
-<body>
-
-<!-- Slider -->
-<div id="slider">
-  <div class="slides">
-    <div class="slider">
-      <div class="legend"></div>
-      <div class="content">
-        <div class="content-txt">
-          <h1>AP N450 UNIFI UAP-PRO</h1>
-          <h2>Nam ultrices pellentesque facilisis. In semper tellus mollis nisl pulvinar vitae vulputate lorem consequat. Fusce odio tortor, pretium sit amet auctor ut, ultrices vel nibh.</h2>
-        </div>
-      </div>
-      <div class="image">
-        <img src="https://i.imgur.com/BEJRDmd.jpg">
-      </div>
-    </div>
-    <div class="slider">
-      <div class="legend"></div>
-      <div class="content">
-        <div class="content-txt">
-          <h1>adaptador USB wireless AC1300 T4U</h1>
-          <h2>Nam ultrices pellentesque facilisis. In semper tellus mollis nisl pulvinar vitae vulputate lorem consequat. Fusce odio tortor, pretium sit amet auctor ut, ultrices vel nibh.</h2>
-        </div>
-      </div>
-      <div class="image">
-        <img src="https://i.imgur.com/fWndwki.jpg">
-      </div>
-    </div>
-    <div class="slider">
-      <div class="legend"></div>
-      <div class="content">
-        <div class="content-txt">
-          <h1>CAMERA IP HD WIRELLESS DCS-2130</h1>
-          <h2>Nam ultrices pellentesque facilisis. In semper tellus mollis nisl pulvinar vitae vulputate lorem consequat. Fusce odio tortor, pretium sit amet auctor ut, ultrices vel nibh.</h2>
-        </div>
-      </div>
-      <div class="image">
-        <img src="https://i.imgur.com/VH2lrAO.jpg">
-      </div>
-    </div>
-    <div class="slider">
-      <div class="legend"></div>
-      <div class="content">
-        <div class="content-txt">
-          <h1>CAMERA BULLET 720 L 2.8MM IR20 BR VM 3120</h1>
-          <h2>Nam ultrices pellentesque facilisis. In semper tellus mollis nisl pulvinar vitae vulputate lorem consequat. Fusce odio tortor, pretium sit amet auctor ut, ultrices vel nibh.</h2>
-        </div>
-      </div>
-      <div class="image">
-        <img src="https://i.imgur.com/iXvbyEG.jpg">
-      </div>
-    </div>
-  </div>
-  <div class="switch">
-    <ul>
-      <li>
-        <div class="on"></div>
-      </li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
-  </div>
-</div>
-</body>
-
-</html>
-
-    
-slider{
-  width:100%;
-  height:500px;
-  position:relative;
-  overflow:hidden;
-}
-@keyframes load{
-  from{left:-100%;}
-  to{left:0;}
-}
-.slides{
-  width:400%;
-  height:100%;
-  position:relative;
-  -webkit-animation:slide 30s infinite;
-  -moz-animation:slide 30s infinite;
-  animation:slide 30s infinite;
-}
-.slider{
-  width:25%;
-  height:100%;
-  float:left;
-  position:relative;
-  z-index:1;
-  overflow:hidden;
-}
-.slide img{
-  width:100%;
-  height:100%;
-}
-.slide img{
-  width:100%;
-  height:100%;
-}
-.image{
-  width:100%;
-  height:100%;
-}
-.image img{
-  width:100%;
-  height:100%;
-}
-
-
-.legend{
-  border:500px solid transparent;
-  /*-------------------Essa linha------------------*/
-  border-left:800px solid rgba(23,117,177,1);
-  /*-------------------Essa linha------------------*/
-  border-bottom:0;
-  position:absolute;
-  bottom:0;
-  
-}
-
-
-.content{
-  width:100%;
-  height:100%;
-  position:absolute;
-  overflow:hidden;
-}
-.content-txt{
-  width:400px;
-  height:150px;
-  float:left;
-  position:relative;
-  top:300px;
-  -webkit-animation:content-s 7.5s infinite;
-  -moz-animation:content-s 7.5s infinite;
-  animation:content-s 7.5s infinite;
-}
-.content-txt h1{
-  font-family:Arial;
-  text-transform:uppercase;
-  font-size:24px;
-  color:#fff;
-  text-align:left;
-  margin-left:30px;
-  padding-bottom:10px;
-}
-.content-txt h2{
-  font-family:arial;
-  font-weight:normal;
-  font-size:14px;
-  font-style:italic;
-  color:#fff;
-  text-align:left;
-  margin-left:30px;
-}
-
-
-.switch{
-  width:120px;
-  height:10px;
-  position:absolute;
-  bottom:50px;
-  z-index:99;
-  left:30px;
-}
-.switch > ul{
-  list-style:none;
-}
-.switch > ul > li{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#333;
-  float:left;
-  margin-right:5px;
-  cursor:pointer;
-}
-.switch ul{
-  overflow:hidden;
-}
-.on{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  background: rgba(23,117,177,1);
-  position:relative;
-  -webkit-animation:on 30s infinite;
-  -moz-animation:on 30s infinite;
-  animation:on 30s infinite;
-}
-
-
-@-webkit-keyframes slide{
-  0%,100%{
-    margin-right:0%;
-  }
-  21%{
-    margin-right:0%;
-  }
-  25%{
-    margin-right:-100%;
-  }
-  46%{
-    margin-right:-100%;
-  }
-  50%{
-    margin-right:-200%;
-  }
-  71%{
-    margin-right:-200%;
-  }
-  75%{
-    margin-right:-300%;
-  }
-  96%{
-    margin-right:-300%;
-  }
-}
-@-moz-keyframes slide{
-  0%,100%{
-    margin-right:0%;
-  }
-  21%{
-    margin-right:0%;
-  }
-  25%{
-    margin-right:-100%;
-  }
-  46%{
-    margin-right:-100%;
-  }
-  50%{
-    margin-right:-200%;
-  }
-  71%{
-    margin-right:-200%;
-  }
-  75%{
-    margin-right:-300%;
-  }
-  96%{
-    margin-right:-300%;
-  }
-}
-@keyframes slide{
-  0%,100%{
-    margin-left:0%;
-  }
-  21%{
-    margin-left:0%;
-  }
-  25%{
-    margin-left:-100%;
-  }
-  46%{
-    margin-left:-100%;
-  }
-  50%{
-    margin-left:-200%;
-  }
-  71%{
-    margin-left:-200%;
-  }
-  75%{
-    margin-left:-300%;
-  }
-  96%{
-    margin-left:-300%;
-  }
-}
-
-@-webkit-keyframes content-s{
-  0%{left:-420px;}
-  10%{left:0px;}
-  30%{left:0px;}
-  40%{left:0px;}
-  50%{left:0px;}
-  60%{left:0px;}
-  70%{left:0;}
-  80%{left:-420px;}
-  90%{left:-420px;}
-  100%{left:-420px;}
-}
-@-moz-keyframes content-s{
-  0%{left:-420px;}
-  10%{left:0px;}
-  30%{left:0px;}
-  40%{left:0px;}
-  50%{left:0px;}
-  60%{left:0px;}
-  70%{left:0;}
-  80%{left:-420px;}
-  90%{left:-420px;}
-  100%{left:-420px;}
-}
-@keyframes content-s{
-  0%{left:-420px;}
-  10%{left:20px;}
-  15%{left:0px;}
-  30%{left:0px;}
-  40%{left:0px;}
-  50%{left:0px;}
-  60%{left:0px;}
-  70%{left:0;}
-  80%{left:-420px;}
-  90%{left:-420px;}
-  100%{left:-420px;}
-}
-
-@-webkit-keyframes on{
-  0%,100%{
-    margin-left:0%;
-  }
-  21%{
-    margin-left:0%;
-  }
-  25%{
-    margin-left:15px;
-  }
-  46%{
-    margin-left:15px;
-  }
-  50%{
-    margin-left:30px;
-  }
-  71%{
-    margin-left:30px;
-  }
-  75%{
-    margin-left:45px;
-  }
-  96%{
-    margin-left:45px;
-  }
-}
-
-@-moz-keyframes on{
-  0%,100%{
-    margin-left:0%;
-  }
-  21%{
-    margin-left:0%;
-  }
-  25%{
-    margin-left:15px;
-  }
-  46%{
-    margin-left:15px;
-  }
-  50%{
-    margin-left:30px;
-  }
-  71%{
-    margin-left:30px;
-  }
-  75%{
-    margin-left:45px;
-  }
-  96%{
-    margin-left:45px;
-  }
-}
-
-@keyframes on{
-  0%,100%{
-    margin-left:0%;
-  }
-  21%{
-    margin-left:0%;
-  }
-  25%{
-    margin-left:15px;
-  }
-  46%{
-    margin-left:15px;
-  }
-  50%{
-    margin-left:30px;
-  }
-  71%{
-    margin-left:30px;
-  }
-  75%{
-    margin-left:45px;
-  }
-  96%{
-    margin-left:45px;
-  }
-}
-
-
-    
 </html>
