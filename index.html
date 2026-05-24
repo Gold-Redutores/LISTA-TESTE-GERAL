@@ -74,18 +74,7 @@
         .signature-pad { border: 1px solid #eee; background: #fff; width: 95%; height: 80px; cursor: crosshair; touch-action: none; }
         .name-input { border-bottom: 1px dashed #ccc !important; width: 90%; margin-bottom: 5px; text-align: center; font-weight: bold; text-transform: uppercase; }
         
-        /* Layout Multimídia */
-        .music-layout { display: flex; gap: 15px; margin-top: 10px; }
-        .music-controls { flex: 1; background: #f9f9f9; padding: 12px; border: 1px solid #333; }
-        .playlist-box { flex: 1; background: #fff; border: 1px solid #333; max-height: 160px; overflow-y: auto; }
-        .music-item { padding: 6px 10px; font-size: 11px; cursor: pointer; border-bottom: 1px solid #eee; color: #333; line-height: 1.4; }
-        .music-item:hover { background: #eee; color: #003366; font-weight: bold; }
-        .music-item.playing { background: #ed1c24; color: white; font-weight: bold; }
-        audio { width: 100%; margin-top: 10px; }
-        .music-status { font-size: 10px; color: #666; display: block; margin-top: 4px; }
-
-        .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 40px; padding-bottom: 50px; }
-        .btn-action { padding: 12px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
+    
 
         @media print { 
             .no-print { display: none !important; } 
@@ -128,47 +117,7 @@
         <span id="db-status" style="font-size: 12px; font-weight: bold; color: orange;">⏳ Sincronizando com GitHub...</span>
     </div>
 
-    <div class="section">DADOS DO CLIENTE E EQUIPAMENTO</div>
-    <table>
-        <tr>
-            <td colspan="2"><label><strong>Cliente:</strong></label> <input type="text" id="campo-cliente"></td>
-            <td colspan="2"><label><strong>Data:</strong></label> <span id="data-atual" style="font-weight: bold;"></span></td>
-        </tr>
-        <tr>
-            <td><label><strong>Equipamento:</strong></label> <input type="text" id="campo-redutor"></td>
-            <td><label><strong>Redução:</strong></label> <input type="text" id="campo-reducao" placeholder="Ex: 1:40"></td>
-            <td colspan="2"><label><strong>Série:</strong></label> <input type="text" id="campo-serie"></td>
-        </tr>
-    </table>
-
-    <div class="section" style="text-align: left; padding-left: 10px;">Serviço executado:</div>
-    <table>
-        <tr>
-            <td><label class="checkbox-container"><input type="checkbox"> Desligamento e retirada da base (15%)</label></td>
-            <td><label class="checkbox-container"><input type="checkbox"> Montagem (65%)</label></td>
-        </tr>
-        <tr>
-            <td><label class="checkbox-container"><input type="checkbox"> Desmont. de acoplam. e tampas (20%)</label></td>
-            <td><label class="checkbox-container"><input type="checkbox"> Montagem na base (75%)</label></td>
-        </tr>
-        <tr>
-            <td><label class="checkbox-container"><input type="checkbox"> Testes elétricos (25%)</label></td>
-            <td><label class="checkbox-container"><input type="checkbox"> Religação elétrica (85%)</label></td>
-        </tr>
-        <tr>
-            <td><label class="checkbox-container"><input type="checkbox"> Análise Eletromecânica (40%)</label></td>
-            <td><label class="checkbox-container"><input type="checkbox"> Alinhamento a laser (90%)</label></td>
-        </tr>
-        <tr>
-            <td><label class="checkbox-container"><input type="checkbox"> Troca de rolamentos (50%)</label></td>
-            <td><label class="checkbox-container"><input type="checkbox"> Acoplagem mecânica (100%)</label></td>
-        </tr>
-        <tr>
-            <td><label class="checkbox-container"><input type="checkbox"> Lubrificação dos rolamentos (55%)</label></td>
-            <td></td>
-        </tr>
-    </table>
-
+  
     <div class="section">ANÁLISES FOTOGRÁFICAS</div>
     <div class="foto-upload-container no-print">
         <label style="font-weight: bold; display: block; margin-bottom: 5px;">📸 ADICIONAR FOTOS</label>
@@ -188,36 +137,7 @@
         <tbody id="tabela-pecas"></tbody>
     </table>
 
-    <div class="section no-print">PASTAS</div>
-    <div class="music-layout no-print">
-        <div class="music-controls">
-            <label style="font-size: 11px; font-weight: bold; color: #003366; display: block; margin-bottom: 5px;">SELECIONE A PASTA DE MÚSICAS:</label>
-            <select id="select-pastas" class="select-header" style="width: 100%; font-size: 12px;" onchange="listarMusicasLocais()">
-                <option value="amado batista dinamite de amor">amado batista dinamite de amor</option>
-                <option value="As velhinhas">As velhinhas</option>
-                <option value="AS VELHINHAS DA RICK SOM">AS VELHINHAS DA RICK SOM</option>
-                <option value="as velhinhas dance vol 01">as velhinhas dance vol 01</option>
-                <option value="as velhinhas dance vol 02">as velhinhas dance vol 02</option>
-                <option value="CLASSICOS SERTANEJO ANOS 80 90">CLASSICOS SERTANEJO ANOS 80 90</option>
-                <option value="dj celso">dj celso</option>
-                <option value="FHASBACK 41 MUSICAS">FHASBACK 41 MUSICAS</option>
-                <option value="FLASH BACK 01">FLASH BACK 01</option>
-                <option value="Flash Back Anos 80">Flash Back Anos 80</option>
-                <option value="Flash Back Anos 90">Flash Back Anos 90</option>
-                <option value="flash back o melhor">flash back o melhor</option>
-            </select>
-            
-            <div style="margin-top: 12px;">
-                <span id="current-track-title" style="font-size: 11px; font-weight: bold; color: #ed1c24; display:block; min-height: 15px;">Nenhuma música tocando</span>
-                <audio id="audio-player" controls></audio>
-                <span id="repo-music-status" class="music-status">Pronto para reprodução local.</span>
-            </div>
-        </div>
-        
-        <div class="playlist-box" id="lista-musicas">
-            </div>
-    </div>
-
+    
     <div class="section">CONCLUSÕES</div>
     <textarea id="conclusoes" rows="5" style="width: 100%; border: 1px solid #333; margin-top: 5px; padding: 8px;" placeholder="Parecer técnico final..."></textarea>
 
@@ -269,118 +189,9 @@
             "DRIVES": { opcoes: ["8", "9", "0"], logo: "GOLD DRIVES.png" }
         };
 
-        // Mapeamento interno seguro: substitua os nomes de exemplo abaixo pelos nomes reais dos arquivos das músicas que estão no seu GitHub!
-        const baseDeMusicasInterna = {
-            "amado batista dinamite de amor": [
-                "Dinamite de Amor.mp3",
-                "Sua Partida.mp3",
-                "Seresteiro das Noites.mp3"
-            ],
-            "As velhinhas": [
-                "Musica Antiga 1.mp3",
-                "Musica Antiga 2.mp3"
-            ],
-            "AS VELHINHAS DA RICK SOM": [
-                "Rick Som Track 1.mp3"
-            ],
-            "as velhinhas dance vol 01": [
-                "Dance Track 01.mp3"
-            ],
-            "as velhinhas dance vol 02": [
-                "Dance Track 02.mp3"
-            ],
-            "CLASSICOS SERTANEJO ANOS 80 90": [
-                "Sertanejo Classico.mp3"
-            ],
-            "dj celso": [
-                "Dj Celso Mix 1.mp3"
-            ],
-            "FHASBACK 41 MUSICAS": [
-                "Flashback Track 1.mp3"
-            ],
-            "FLASH BACK 01": [
-                "Flash 01.mp3"
-            ],
-            "Flash Back Anos 80": [
-                "Anos 80 Pop.mp3"
-            ],
-            "Flash Back Anos 90": [
-                "Anos 90 Dance.mp3"
-            ],
-            "flash back o melhor": [
-                "O Melhor do Flashback.mp3"
-            ]
-        };
+      
 
-        function atualizarSegundaCaixa() {
-            const empresaSelecionada = document.getElementById('select-empresa').value;
-            const selectOpcoes = document.getElementById('select-opcoes');
-            const imgLogo = document.getElementById('dinamic-logo');
-            
-            selectOpcoes.innerHTML = '';
-            const dados = opcoesPorEmpresa[empresaSelecionada];
-            dados.opcoes.forEach(opcao => {
-                const elOpt = document.createElement('option');
-                elOpt.value = opcao;
-                elOpt.innerText = opcao;
-                selectOpcoes.appendChild(elOpt);
-            });
-
-            imgLogo.src = dados.logo;
-            imgLogo.alt = "Gold " + empresaSelecionada.charAt(0) + empresaSelecionada.slice(1).toLowerCase();
-        }
-
-        // Nova listagem via mapeamento fixo, livre de erros de conexão e restrições de privacidade
-        function listarMusicasLocais() {
-            const pasta = document.getElementById('select-pastas').value;
-            const containerLista = document.getElementById('lista-musicas');
-            const statusLabel = document.getElementById('repo-music-status');
-            
-            containerLista.innerHTML = '';
-            const musicas = baseDeMusicasInterna[pasta] || [];
-
-            if (musicas.length === 0) {
-                containerLista.innerHTML = '<div style="padding:10px; font-size:11px; color:#ed1c24;">Nenhuma música listada para esta pasta no código.</div>';
-                statusLabel.innerText = "Sem faixas mapeadas.";
-                return;
-            }
-
-            statusLabel.innerText = `${musicas.length} faixas prontas para reprodução.`;
-
-            musicas.forEach(musica => {
-                const item = document.createElement('div');
-                item.className = 'music-item';
-                item.innerText = musica.replace('.mp3', ''); // Remove a extensão .mp3 visualmente
-                
-                item.onclick = function() {
-                    document.querySelectorAll('.music-item').forEach(el => el.classList.remove('playing'));
-                    item.classList.add('playing');
-                    executarAudioDireto(pasta, musica);
-                };
-                containerLista.appendChild(item);
-            });
-        }
-
-        function executarAudioDireto(pasta, nomeArquivo) {
-            const player = document.getElementById('audio-player');
-            const txtTitulo = document.getElementById('current-track-title');
-            
-            // Monta a URL de transmissão direta corrigindo espaços
-            const urlFinalAudio = URL_BASE_STREAM + encodeURIComponent(pasta) + "/" + encodeURIComponent(nomeArquivo);
-            
-            player.src = urlFinalAudio;
-            txtTitulo.innerText = "Carregando mídia...";
-            
-            player.play()
-                .then(() => {
-                    txtTitulo.innerText = "Tocando: " + nomeArquivo.replace('.mp3', '');
-                })
-                .catch(err => {
-                    txtTitulo.innerText = "Erro ao reproduzir. Verifique se o nome do arquivo bate com o GitHub.";
-                    console.log("Erro no link direto:", urlFinalAudio);
-                });
-        }
-
+       
         function parseCSV(text) {
             let lines = []; let currentLine = []; let currentField = ''; let insideQuotes = false;
             for (let i = 0; i < text.length; i++) {
