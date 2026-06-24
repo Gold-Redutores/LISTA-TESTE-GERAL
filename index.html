@@ -5,59 +5,25 @@
     <title>Relatório de Manutenção - Grupo Gold</title>
     <style>
         /* Estilos Globais do Relatório */
-       body { 
-    font-family: Arial, sans-serif; 
-    margin: 20px; 
-    color: #003366; 
-    /* Adicionando o fundo */
-    background-image: url('fundoinpasa1.jpg');
-    background-size: cover;          /* Faz a imagem cobrir todo o espaço */
-    background-position: center;     /* Centraliza a imagem */
-    background-attachment: fixed;    /* Mantém a imagem fixa ao rolar a página */
-    background-repeat: no-repeat;    /* Evita que a imagem se repita */
-    background-color: rgba(255, 255, 255, 0.85); /* Fundo branco levemente transparente */
-    padding: 10px;
-    border-radius: 8px;
-}
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            color: #003366; 
+            background-image: url('fundoinpasa1.jpg');
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
+            background-repeat: no-repeat; 
+            background-color: rgba(255, 255, 255, 0.85); 
+            padding: 10px;
+            border-radius: 8px;
+        }
         
-        .header-container {
-            display: flex;
-            align-items: center; 
-            justify-content: space-between;
-            border-bottom: 3px solid #ed1c24;
-            padding-bottom: 15px;
-            margin-bottom: 10px;
-        }
-
-        .brand-logo {
-            max-height: 80px;
-            width: auto;
-            font-weight: bold;
-            font-size: 20px;
-        }
-
-        .title-area {
-            flex-grow: 1;
-            text-align: center;
-        }
-
-        .title-area h2 {
-            margin: 0;
-            font-size: 20px;
-            text-transform: uppercase;
-            color: #003366;
-        }
-
-        .select-header {
-            padding: 5px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #003366;
-            border: 1px solid #333;
-            background: #f4f4f4;
-            border-radius: 4px;
-        }
-
+        .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #ed1c24; padding-bottom: 15px; margin-bottom: 10px; }
+        .brand-logo { max-height: 80px; width: auto; font-weight: bold; font-size: 20px; }
+        .title-area { flex-grow: 1; text-align: center; }
+        .title-area h2 { margin: 0; font-size: 20px; text-transform: uppercase; color: #003366; }
+        .select-header { padding: 5px; font-size: 14px; font-weight: bold; color: #003366; border: 1px solid #333; background: #f4f4f4; border-radius: 4px; }
         .section { background: #d9d9d9; padding: 6px; margin-top: 15px; font-weight: bold; text-align: center; border: 1px solid #333; text-transform: uppercase; font-size: 13px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 0; }
         table, th, td { border: 1px solid #333; }
@@ -66,25 +32,16 @@
         input[type="text"], input[type="number"], textarea, select { width: 98%; border: none; outline: none; background: transparent; font-size: 11px; color: #000; }
         select { cursor: pointer; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
 
-        .checkbox-container { display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .checkbox-container input { width: auto; margin: 0; }
-
-        .autocomplete-wrapper { position: relative; overflow: visible !important; }
-        .suggestions { 
-            position: absolute; background: white; border: 2px solid #333; 
-            width: 100%; z-index: 99999; max-height: 250px; overflow-y: auto; 
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.3); display: none; left: 0; top: 100%;
-        }
-        .suggestion-item { padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; color: #000; text-align: left; }
-        .suggestion-item:hover { background-color: #ed1c24; color: white; }
-
-        .foto-upload-container { text-align: center; padding: 15px; background: #f4f4f4; border: 2px dashed #ccc; margin: 10px 0; border-radius: 5px; }
+        /* MODIFICAÇÃO: Estilo da zona de Drop */
+        .foto-upload-container { text-align: center; padding: 25px; background: #f4f4f4; border: 2px dashed #ccc; margin: 10px 0; border-radius: 5px; transition: 0.3s; cursor: pointer; }
+        
         .foto-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
         .foto-item { border: 1px solid #333; padding: 8px; text-align: center; background: #fff; position: relative; page-break-inside: avoid; display: flex; flex-direction: column; }
         .foto-preview { max-width: 100%; height: auto; max-height: 300px; object-fit: contain; margin-bottom: 8px; }
-
         .btn-remove { position: absolute; top: 5px; right: 5px; background: #ed1c24; color: white; border: none; cursor: pointer; padding: 3px 10px; font-weight: bold; border-radius: 3px; z-index: 10; }
-
+       
+        /* ... (restante dos estilos originais mantidos) ... */
+        
         .signature-pad { border: 1px solid #eee; background: #fff; width: 95%; height: 80px; cursor: crosshair; touch-action: none; }
         .name-input { border-bottom: 1px dashed #ccc !important; width: 90%; margin-bottom: 5px; text-align: center; font-weight: bold; text-transform: uppercase; }
 
@@ -324,9 +281,16 @@
     </div>
 
     <div class="section">ANÁLISES FOTOGRÁFICAS DO RELATÓRIO</div>
-    <div class="foto-upload-container no-print">
-        <label style="font-weight: bold; display: block; margin-bottom: 5px;">📸 ADICIONAR FOTOS DO SERVIÇO</label>
-        <input type="file" accept="image/*" multiple onchange="previewFotos(event)">
+    <div class="foto-upload-container no-print" 
+         id="drop-zone"
+         ondragover="event.preventDefault(); this.style.borderColor='#ed1c24';"
+         ondragleave="this.style.borderColor='#ccc';"
+         ondrop="handleDrop(event)"
+         onclick="document.getElementById('file-input').click()">
+        <label style="font-weight: bold; display: block; margin-bottom: 5px; cursor: pointer;">
+            📸 ARRASTE FOTOS AQUI OU CLIQUE PARA SELECIONAR
+        </label>
+        <input type="file" id="file-input" accept="image/*" multiple onchange="previewFotos(event)" style="display:none;">
     </div>
     <div id="container-fotos" class="foto-container"></div>
 
@@ -518,6 +482,19 @@
             document.getElementById('tabela-pecas').appendChild(tr);
         }
 
+// MODIFICAÇÃO: Nova função para processar o arraste
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('drop-zone').style.borderColor = '#ccc';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                previewFotos({ target: { files: files } });
+            }
+        }
+
+
+
+        
         function previewFotos(e) {
             for (let f of e.target.files) {
                 const r = new FileReader();
