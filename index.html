@@ -491,7 +491,17 @@
                 previewFotos({ target: { files: files } });
             }
         }
-
+// MODIFICAÇÃO: Captura de Ctrl+V para colar prints
+window.addEventListener('paste', e => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+            const blob = items[i].getAsFile();
+            // Cria um "pseudo-evento" para passar para sua função previewFotos existente
+            previewFotos({ target: { files: [blob] } });
+        }
+    }
+});
 
 
         
